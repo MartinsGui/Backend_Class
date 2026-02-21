@@ -42,11 +42,18 @@ export class AppController {
 
   @Get('authors')
   getAuthorsList() {
-    const author = [];
-    for (let i = 0; i < this.#acervo.length; i++) {
-      author.push(this.#acervo[i].autor)
+    //const author = [];
+    //for (let i = 0; i < this.#acervo.length; i++) {
+      //if(author.filter(name => name === this.#acervo[i].autor).length === 0){
+        //author.push(this.#acervo[i].autor);
+      //}
+    //}
+    //return author;
+    const authors = new Set();
+    for(const book of this.#acervo.values()){
+      authors.add(book.autor);
     }
-    return author;
+    return Array.from(authors);
   }
 
 }
