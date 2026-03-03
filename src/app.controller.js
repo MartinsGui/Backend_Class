@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query, Bind, Param, Post, Body } from '@nestjs/common';
 //import { AppService } from './app.service';
 
 @Controller('library')
@@ -56,4 +56,35 @@ export class AppController {
     return Array.from(authors);
   }
 
+  @Get('bookAuthor')
+  @Bind(Query())
+  getBookAuthor(query){
+    console.log(query.autor);    
+    let bookAuthor = [];
+    for(const book of this.#acervo.values()){
+      if(book.autor === query.autor){
+        bookAuthor.push(book.titulo);
+      }  
+    }
+    return bookAuthor;
+  }
+
+  @Get('bookTitle/:titulo')
+  @Bind(Param())
+  getBookTitle(param){   
+    let bookTitle = [];
+    for(const book of this.#acervo.values()){
+      if(book.titulo === param.titulo){
+        bookTitle.push(book.autor);
+      }  
+    }
+    return bookTitle;
+  }
+
+  @Post('book')
+  @Bind(Body())
+  postAddBook(body){
+    this.#acervo.push(body);
+    return "Book added successfully!";
+  }
 }
