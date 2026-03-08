@@ -1,6 +1,6 @@
 import { Test } from '@nestjs/testing';
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { Acervo } from './app.service';
 
 describe('AppController', () => {
   let appController;
@@ -8,7 +8,7 @@ describe('AppController', () => {
   beforeEach(async () => {
     const app = await Test.createTestingModule({
       controllers: [AppController],
-      providers: [AppService],
+      providers: [Acervo],
     }).compile();
 
     appController = app.get(AppController);
@@ -22,8 +22,8 @@ describe('AppController', () => {
 
   describe('getBooksList', () => {
     it('should return "Book lists"', () => {
-      const appController = new AppController();
-      const bookList = appController.getBooksList();
+      const acervo = new Acervo();
+      const bookList = acervo.getBooksList();
       const expectedBookList = [
         {titulo:"Introducao ao JavaScrip",autor:"Huguinho Pato"},
         {titulo:"NodeJS for Dummys",autor:"Zezinho Pato"},
@@ -35,7 +35,7 @@ describe('AppController', () => {
       expect(bookList).toEqual(expectedBookList);
 
 
-      expect(appController.getBooksList()).toBe(bookList);
+      expect(acervo.getBooksList()).toBe(bookList);
     });
   });
 });
