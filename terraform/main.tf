@@ -1,3 +1,7 @@
+provider "aws" {
+  region = "us-east-1"
+}
+
 resource "aws_security_group" "backend_sg" {
 
   name = "backend-devops-sg"
@@ -35,7 +39,7 @@ resource "aws_instance" "backend" {
     aws_security_group.backend_sg.id
   ]
 
-  user_data = file("scripts/setup.sh")
+  user_data = file("../scripts/setup.sh")
 
   tags = {
     Name = "Backend_DevOps"
