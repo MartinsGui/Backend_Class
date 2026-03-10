@@ -1,12 +1,15 @@
 import { Dependencies, Controller, Get, Query, Bind, Param, Post, Body } from '@nestjs/common';
-import { Acervo } from './app.service';
+import { Acervo, Metrics } from './app.service';
 
 @Controller('library')
-@Dependencies(Acervo)
+@Dependencies(Acervo, Metrics)
 export class AppController {
   #acervo;
-  constructor(acervo) {
+  #metrics;
+  
+  constructor(acervo, metrics) {
     this.#acervo = acervo;
+    this.#metrics = metrics;
   }
 
   @Get()
@@ -45,5 +48,23 @@ export class AppController {
   @Bind(Body())
   postAddBook(body){
     return this.#acervo.postAddBook(body);
+  }
+
+  @Get('booksPerAuthor')
+  @Bind(Query())
+  getBooksPerAuthor(query){
+    return this.#metrics.getCountBooksPerAuthor(query.autor);
+  }
+
+  @Get('booksPerYear')
+  @Bind(Query())
+  getCountBooksPertear(query){
+    return this.#metrics.getCountBooksPerYear(query.ano); 
+  }
+
+  @Get('booksPerAuthorAndYear')
+  @Bind(Query())
+  getCountBooksPerAuthorAndYear(query){
+    return this.#metrics.getCountBooksPerAuthorAndYear(query.autor, Number(query.ano));
   }
 }
