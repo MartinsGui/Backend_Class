@@ -243,11 +243,27 @@ Access the API:
 http://localhost:3000/library/books
 ```
 
+Start application via docker:
+1- Build the project via docker
+```
+docker build -t backend-class .
+```
+2- Run application on port 3000
+```
+docker run -p 3000:3000 backend-class
+```
+
+Observability
+```
+docker logs <container_id>
+```
+
 ---
 
 # Base URL
 
 Local environment:
+Or you can change manually on 
 
 ```
 http://localhost:3000
