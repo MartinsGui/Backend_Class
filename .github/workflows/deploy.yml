@@ -50,6 +50,8 @@ jobs:
           username: ec2-user
           key: ${{ secrets.EC2_KEY }}
           script: |
+            docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASS }}
+
             docker pull ${{ secrets.DOCKER_USER }}/backend-class
 
             docker stop backend-class || true
