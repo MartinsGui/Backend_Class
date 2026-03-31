@@ -1,4 +1,4 @@
-name: CI Pipelie
+name: CI/CD Pipeline
 
 on:
   push:
@@ -23,3 +23,39 @@ jobs:
 
       - name: Executar testes
         run: npm test
+
+      - name: Build Docker image
+        run: docker build -t backend-class .
+
+      - name: Login Docker Hub
+        if: github.event_name == 'push'
+        run: echo ${{ secrets.DOCKER_PASS }} | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin
+
+      - name: Tag image
+        if: github.event_name == 'push'
+        run: docker tag backend-class ${{ secrets.DOCKER_USER }}/backend-class
+
+      - name: Push image
+        if: github.event_name == 'push'
+        run: docker push ${{ secrets.DOCKER_USER }}/backend-class
+
+      - name: Run container (teste local no pipeline)
+        run: docker run -d -p 3001:3000 backend-class
+
+      - name: Deploy to EC2
+        if: github.ref == 'refs/heads/main'
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            docker pull ${{ secrets.DOCKER_USER }}/backend-class
+
+            docker stop backend-class || true
+            docker rm backend-class || true
+
+            docker run -d -p 3000:3000 --name backend-class ${{ secrets.DOCKER_USER }}/backend-class
+
+      - name: Ver logs
+        run: docker logs $(docker ps -q)
